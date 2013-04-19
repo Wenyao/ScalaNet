@@ -95,6 +95,7 @@ object MessagePasser {
     }
 	
 	def main(args: Array[String]): Unit = {
-		listen(2222)
+		listen(2222) //for server testing
+		//connect("localhost", 2222) for client testing
 	}
 }
