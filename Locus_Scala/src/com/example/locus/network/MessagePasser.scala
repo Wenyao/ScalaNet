@@ -1,6 +1,7 @@
 import java.io._
 import java.net._
 import com.example.locus.core.ICore
+import com.example.locus.core.CoreFacade
 import com.example.locus.entity.User
 import com.example.locus.entity.Message
 import com.example.locus.util.SerializeHelper
@@ -33,38 +34,38 @@ object MessagePasser {
   		}
   		//the main thread for messaging
   		//TODO add actor for main thread
-		val ss = new ServerSocket(port)
-		while(true){
-		    println("listening for message...")
-			val sock = ss.accept()
-			actors.Actor.actor{
-		      	val is = new BufferedInputStream(sock.getInputStream())
-				val os = new PrintStream(new BufferedOutputStream(sock.getOutputStream()))
-				val oos = new ObjectOutputStream(sock.getOutputStream())
-		      	os.println("Connected to Server Wenyao Li, start chatting:")
-		      	os.flush()
-		      	actors.Actor.actor {
-					while(true){		
-						while(is.available() < 1) {Thread.sleep(100)}
-						val buf = new Array[Byte] (is.available)
-						is.read(buf)
-						val recvmsg = new String(buf)
-						println(recvmsg)
-						
-						//TODO call coreHandler's onReceiveMessage
-						val message : Message = SerializeHelper.deserialize(buf).asInstanceOf[Message]
-						coreHandler.onReceiveMessage(message.getSrc(), message.getData().asInstanceOf[String]);
+  		actors.Actor.actor{
+  			val ss = new ServerSocket(port)
+  			while(true){
+  				println("listening for message...")
+  				val sock = ss.accept()
+  				actors.Actor.actor{
+  					val is = new BufferedInputStream(sock.getInputStream())
+  					val os = new PrintStream(new BufferedOutputStream(sock.getOutputStream()))
+  					val oos = new ObjectOutputStream(sock.getOutputStream())
+  					os.println("Connected to Server Wenyao Li, start chatting:")
+  					os.flush()
+  					actors.Actor.actor {
+  						while(true){		
+  							while(is.available() < 1) {Thread.sleep(100)}
+  							val buf = new Array[Byte] (is.available)
+  							is.read(buf)
+  							val recvmsg = new String(buf)
+  							println(recvmsg)
+							//TODO call coreHandler's onReceiveMessage
+  							val message : Message = SerializeHelper.deserialize(buf).asInstanceOf[Message]
+  							coreHandler.onReceiveMessage(message.getSrc(), message.getData().asInstanceOf[String]);
+  						}
+  					}
+  					while(true){
+						val sendmsg = readLine
+						os.println(sendmsg)
+						os.flush()
 					}
-				}
-				while(true){
-					val sendmsg = readLine
-					os.println(sendmsg)
-					os.flush()
-				}
-
-			}
+  				}
+  			}
 		}
-		ss.close()
+		//ss.close()
     }
 	
 	def connect(ip: String, port: Integer): Unit = {
@@ -112,7 +113,7 @@ object MessagePasser {
     }
 	
 	def main(args: Array[String]): Unit = {
-		//listen(2222) //for server testing
+		listen(2222, CoreFacade.getInstance()) //for server testing
 		//connect("localhost", 2222) for client testing
 	}
 }
