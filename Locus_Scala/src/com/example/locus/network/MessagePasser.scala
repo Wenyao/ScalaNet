@@ -1,15 +1,16 @@
-import java.io._
-import java.net._
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.net.ServerSocket
+import java.net.Socket
+
 import com.example.locus.core.ICore
-//import com.example.locus.core.CoreFacade
-import com.example.locus.entity.User
-import com.example.locus.entity.Sex
 import com.example.locus.entity.Message
-import com.example.locus.util.SerializeHelper
+import com.example.locus.entity.User
+
 
 object MessagePasser {
     //TODO add coreHandler
-  	//val user = new User("Alice", Sex.Female, "192.168.1.1", 0, 0) 
+  	//val user = new User("Alice", Sex.Female, "192.168.1.1", 0, 0)
   	var coreHandler: ICore = _
 	
   	def listen(port: Integer, core: ICore): Unit = {
