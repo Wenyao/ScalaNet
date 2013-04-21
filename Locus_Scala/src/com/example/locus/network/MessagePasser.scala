@@ -46,7 +46,7 @@ object MessagePasser {
   					//val oos = new ObjectOutputStream(sock.getOutputStream())
   					val ois = new ObjectInputStream(sock.getInputStream())
   					val recvmsg = ois.readObject.asInstanceOf[Message]
-  					Message.refreshID(recvmsg.getId())
+  					Message.refreshId(recvmsg.getId())
 					//TODO call coreHandler's onReceiveMessage
  					//val message : Message = SerializeHelper.deserialize(buf).asInstanceOf[Message]
   					//println(recvmsg.toString())
