@@ -1,11 +1,13 @@
-import java.io._
-import java.net._
+package com.example.locus.network
+
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.net.ServerSocket
+import java.net.Socket
+
 import com.example.locus.core.ICore
-//import com.example.locus.core.CoreFacade
-import com.example.locus.entity.User
-import com.example.locus.entity.Sex
 import com.example.locus.entity.Message
-import com.example.locus.util.SerializeHelper
+import com.example.locus.entity.User
 
 object MessagePasser {
     //TODO add coreHandler
