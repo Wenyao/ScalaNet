@@ -26,7 +26,7 @@ object MessagePasser {
 				actors.Actor.actor{
   					val oos = new ObjectOutputStream(sock.getOutputStream())					
   					//TODO getCurrentUser from core
-  					//oos.writeObject(user)
+  					//oos.writeObject("USER!")
   					oos.writeObject(coreHandler.getCurrentUser()) 	
   					oos.flush()
 				}
@@ -81,7 +81,7 @@ object MessagePasser {
     }
 	
 	def main(args: Array[String]): Unit = {
-		//listen(2222) //for server testing
+		listen(2222, null) //for server testing
 		//connect("localhost", 2222) for client testing
 	}
 }
