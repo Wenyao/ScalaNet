@@ -11,7 +11,7 @@ import com.example.locus.entity.User
 
 object MessagePasser {
     //TODO add coreHandler
-  	//val user = new User("Alice", Sex.Female, "192.168.1.1", 0, 0) 
+  	//val user = new User("Alice", Sex.Female, "192.168.1.1", 0, 0)
   	var coreHandler: ICore = _
 	
   	def listen(port: Integer, core: ICore): Unit = {
@@ -26,7 +26,7 @@ object MessagePasser {
 				actors.Actor.actor{
   					val oos = new ObjectOutputStream(sock.getOutputStream())					
   					//TODO getCurrentUser from core
-  					//oos.writeObject(user)
+  					//oos.writeObject("USER!")
   					oos.writeObject(coreHandler.getCurrentUser()) 	
   					oos.flush()
 				}
@@ -46,10 +46,11 @@ object MessagePasser {
   					//val oos = new ObjectOutputStream(sock.getOutputStream())
   					val ois = new ObjectInputStream(sock.getInputStream())
   					val recvmsg = ois.readObject.asInstanceOf[Message]
+  					Message.refreshId(recvmsg.getId())
 					//TODO call coreHandler's onReceiveMessage
  					//val message : Message = SerializeHelper.deserialize(buf).asInstanceOf[Message]
   					//println(recvmsg.toString())
-  					coreHandler.onReceiveMessage(recvmsg.getSrc(), recvmsg.getData().asInstanceOf[String]) 					
+  					coreHandler.onReceiveMessage(recvmsg) 					
   				}
   			}
 		}
@@ -64,6 +65,7 @@ object MessagePasser {
   		val oos = new ObjectOutputStream(sock.getOutputStream())
 		//val bois = new BufferedInputStream(ois)
 		val sendmsg = new Message(src, dest, "message", content)
+  		sendmsg.setId()
   		oos.writeObject(sendmsg) 
   		oos.flush()
 		sock.close()
@@ -79,7 +81,7 @@ object MessagePasser {
     }
 	
 	def main(args: Array[String]): Unit = {
-		//listen(2222) //for server testing
+		listen(2222, null) //for server testing
 		//connect("localhost", 2222) for client testing
 	}
 }
