@@ -13,14 +13,15 @@ object MessagePasser {
     //TODO add coreHandler
   	//val user = new User("Alice", Sex.Female, "192.168.1.1", 0, 0)
   	var coreHandler: ICore = _
+  	var stop : Boolean = false;
 	
   	def listen(port: Integer, core: ICore): Unit = {
   		coreHandler = core
-  	  
+  		stop = false;
   		//the listening thread for handling user profile request 
   		actors.Actor.actor{
   			val ss = new ServerSocket(port+1)
-  			while(true){
+  			while(!stop){
   				println("listening for profile request...")
 				val sock = ss.accept()
 				actors.Actor.actor{
@@ -37,7 +38,7 @@ object MessagePasser {
   		//TODO add actor for main thread
   		actors.Actor.actor{
   			val ss = new ServerSocket(port)
-  			while(true){
+  			while(!stop){
   				//println("listening for message...")
   				val sock = ss.accept()
   				actors.Actor.actor{
@@ -70,6 +71,10 @@ object MessagePasser {
   		oos.flush()
 		sock.close()
     }
+	
+	def stopListen() : Unit = {
+	  stop = true;
+	}
 
 	def checkProfile(target: User, port: Integer): Object = {
   		val sock = new Socket(target.getIp(), port+1)
