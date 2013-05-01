@@ -4,10 +4,10 @@ import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.net.ServerSocket
 import java.net.Socket
-
 import com.example.locus.core.ICore
 import com.example.locus.entity.Message
 import com.example.locus.entity.User
+import java.io.Serializable
 
 object MessagePasser {
     //TODO add coreHandler
@@ -58,14 +58,14 @@ object MessagePasser {
 		//ss.close()
     }
 	
-	def sendMessage(src: User, dest: User, port: Integer, content: String): Unit = {
+	def sendMessage(src: User, dest: User, port: Integer, kind : String, content: Serializable): Unit = {
   		val sock = new Socket(dest.getIp(), port)
   		//val is = new BufferedReader(new InputStreamReader(sock.getInputStream()))
 		//val os = new PrintStream(sock.getOutputStream())
   		//val ois = new ObjectInputStream(sock.getInputStream())
   		val oos = new ObjectOutputStream(sock.getOutputStream())
 		//val bois = new BufferedInputStream(ois)
-		val sendmsg = new Message(src, dest, "message", content)
+		val sendmsg = new Message(src, dest, kind, content)
   		sendmsg.setId()
   		oos.writeObject(sendmsg) 
   		oos.flush()
